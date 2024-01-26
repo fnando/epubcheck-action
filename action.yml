@@ -1,0 +1,34 @@
+---
+name: "epubcheck"
+description: "Install the latest epubcheck available"
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        sudo apt-get install -y ca-certificates-java default-jre \
+          default-jre-headless fastjar jarwrapper libapache-pom-java \
+          libatinject-jsr330-api-java libatk-wrapper-java libatk-wrapper-java-jni \
+          libcommons-compress-java libcommons-parent-java libdom4j-java \
+          libguava-java libicu4j-java libintellij-annotations-java \
+          libisorelax-java libjackson-json-java libjaxen-java libjaxrs-api-java \
+          libjdom1-java libjetbrains-annotations-java libjing-java \
+          libjoda-time-java libjsr305-java libpcsclite1 libsac-java libsaxon-java \
+          libsaxonhe-java libxalan2-java libxcb-shape0 libxerces2-java \
+          libxml-commons-external-java libxml-commons-resolver1.1-java libxom-java \
+          libxv1 libxxf86dga1 openjdk-11-jre openjdk-11-jre-headless x11-utils \
+          wget unzip
+
+        cd /tmp
+        wget https://github.com/w3c/epubcheck/releases/download/v5.1.0/epubcheck-5.1.0.zip
+        unzip epubcheck-5.1.0.zip
+        sudo mv epubcheck-5.1.0 /epubcheck
+
+        sudo tee /usr/bin/epubcheck << END
+        #!/usr/bin/env bash
+        java -jar /epubcheck/epubcheck.jar \$@
+        END
+
+        sudo chmod +x /usr/bin/epubcheck
+        epubcheck --version
+
+      shell: bash
